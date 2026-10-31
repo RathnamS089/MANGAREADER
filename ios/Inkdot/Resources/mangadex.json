@@ -1,0 +1,41 @@
+{
+  "id": "mangadex",
+  "name": "MangaDex",
+  "lang": "en",
+  "version": 2,
+  "type": "json",
+  "baseUrl": "https://api.mangadex.org",
+  "pageSize": 20,
+  "popular": {
+    "url": "{base}/manga?limit=20&offset={offset}&order[followedCount]=desc&includes[]=cover_art&contentRating[]=safe&contentRating[]=suggestive&availableTranslatedLanguage[]=en&hasAvailableChapters=true",
+    "list": "data",
+    "key": "{id}",
+    "title": "{attributes.title.en|attributes.title.*}",
+    "cover": "https://uploads.mangadex.org/covers/{id}/{relationships[type=cover_art].attributes.fileName}.256.jpg"
+  },
+  "search": {
+    "url": "{base}/manga?limit=20&offset={offset}&title={query}&includes[]=cover_art&contentRating[]=safe&contentRating[]=suggestive&availableTranslatedLanguage[]=en&hasAvailableChapters=true&order[relevance]=desc",
+    "list": "data",
+    "key": "{id}",
+    "title": "{attributes.title.en|attributes.title.*}",
+    "cover": "https://uploads.mangadex.org/covers/{id}/{relationships[type=cover_art].attributes.fileName}.256.jpg"
+  },
+  "details": {
+    "url": "{base}/manga/{key}?includes[]=cover_art&includes[]=author",
+    "description": "{data.attributes.description.en|data.attributes.description.*}",
+    "author": "{data.relationships[type=author].attributes.name}",
+    "cover": "https://uploads.mangadex.org/covers/{data.id}/{data.relationships[type=cover_art].attributes.fileName}.512.jpg"
+  },
+  "chapters": {
+    "url": "{base}/manga/{key}/feed?translatedLanguage[]=en&order[volume]=desc&order[chapter]=desc&limit=500&includeExternalUrl=0&contentRating[]=safe&contentRating[]=suggestive",
+    "list": "data",
+    "key": "{id}",
+    "name": "Ch. {attributes.chapter} {attributes.title}",
+    "date": "{attributes.publishAt}"
+  },
+  "pages": {
+    "url": "{base}/at-home/server/{key}",
+    "list": "chapter.data",
+    "image": "{$root.baseUrl}/data/{$root.chapter.hash}/{$}"
+  }
+}
