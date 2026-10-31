@@ -19,12 +19,15 @@ final class SourceManager {
         reload()
     }
 
-    /// Installs the sources bundled with the app on first launch, so there is something to read
-    /// before any repo is added, and upgrades them when the app ships a newer version.
+    /// Installs each source bundled with the app once, so there is something to read before
+    /// any repo is added, and upgrades them when the app ships a newer version.
     /// Uninstalling one sticks.
     private func seedBuiltIns() {
-        let firstLaunch = !UserDefaults.standard.bool(forKey: "seededBuiltIns")
-        for id in ["mangadex"] {
+        let defaults = UserDefaults.standard
+        var seeded = Set(defaults.stringArray(forKey: "seededBuiltInIds") ?? [])
+        // Builds before per-source tracking only shipped MangaDex.
+        if defaults.bool(forKey: "seededBuiltIns") { seeded.insert("mangadex") }
+        for id in ["mangadex", "webtoon"] {
             guard let bundled = Bundle.main.url(forResource: id, withExtension: "json"),
                   let data = try? Data(contentsOf: bundled),
                   let def = try? JSONDecoder().decode(SourceDef.self, from: data) else { continue }
@@ -32,11 +35,12 @@ final class SourceManager {
             let installed = (try? Data(contentsOf: target)).flatMap { try? JSONDecoder().decode(SourceDef.self, from: $0) }
             if let installed {
                 if installed.version < def.version { try? data.write(to: target, options: .atomic) }
-            } else if firstLaunch {
+            } else if !seeded.contains(id) {
                 try? data.write(to: target, options: .atomic)
             }
+            seeded.insert(id)
         }
-        UserDefaults.standard.set(true, forKey: "seededBuiltIns")
+        defaults.set(Array(seeded).sorted(), forKey: "seededBuiltInIds")
     }
 
     func source(_ id: String) -> (any Source)? {

@@ -4,6 +4,9 @@ import SwiftSoup
 /// HTML field selectors: `css@attr`, `css` (text), or `@attr` on the item itself.
 /// `|` separates fallbacks. URL attributes are made absolute.
 enum HtmlSelector {
+    /// Attributes that hold links; anything else (ids, counts) is returned as written.
+    private static let urlAttributes: Set<String> = ["href", "src", "data-src", "data-url", "data-original", "data-lazy-src", "poster"]
+
     static func get(_ element: Element, _ spec: String?) -> String? {
         guard let spec else { return nil }
         for alt in spec.split(separator: "|") {
@@ -24,7 +27,7 @@ enum HtmlSelector {
             case "own": value = target.ownText()
             case "html": value = try? target.html()
             default:
-                let abs = (try? target.absUrl(attr)) ?? ""
+                let abs = urlAttributes.contains(attr.lowercased()) ? ((try? target.absUrl(attr)) ?? "") : ""
                 if abs.isEmpty { value = try? target.attr(attr) } else { value = abs }
             }
             if let v = value?.trimmingCharacters(in: .whitespacesAndNewlines), !v.isEmpty { return v }

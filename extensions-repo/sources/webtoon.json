@@ -1,0 +1,41 @@
+{
+  "id": "webtoon",
+  "name": "WEBTOON",
+  "lang": "en",
+  "version": 2,
+  "type": "html",
+  "baseUrl": "https://www.webtoons.com",
+  "headers": { "Referer": "https://www.webtoons.com/" },
+  "readerMode": "vertical",
+  "popular": {
+    "url": "{base}/en/ranking/popular",
+    "list": "a._ranking_title_a[data-webtoon-type=WEBTOON]",
+    "key": "@data-title-no",
+    "title": "strong.title",
+    "cover": "img@src"
+  },
+  "search": {
+    "url": "{base}/en/search?keyword={query}",
+    "list": "a._card_item[data-webtoon-type=WEBTOON]",
+    "key": "@data-title-no",
+    "title": "strong.title",
+    "cover": "img@src"
+  },
+  "details": {
+    "url": "{base}/en/originals/title/list?title_no={key}",
+    "description": "p.summary",
+    "author": "a.author|div.author_area@own"
+  },
+  "chapters": {
+    "type": "json",
+    "url": "https://m.webtoons.com/api/v1/webtoon/{key}/episodes?pageSize=99999",
+    "list": "result.episodeList",
+    "key": "https://www.webtoons.com{viewerLink}",
+    "name": "{episodeTitle}",
+    "reverse": true
+  },
+  "pages": {
+    "list": "#_imageList img._images",
+    "image": "@data-url"
+  }
+}

@@ -12,7 +12,9 @@ final class DeclarativeSource: Source {
     var lang: String { def.lang }
     var headers: [String: String] { def.headers }
     var supportsSearch: Bool { def.search != nil }
-    private var isJson: Bool { def.type.lowercased() == "json" }
+    var preferredMode: ReaderMode? { def.readerMode.flatMap(ReaderMode.init(rawValue:)) }
+    /// A section can override the source's type, e.g. an HTML site with a JSON chapter API.
+    private func isJson(_ sectionType: String?) -> Bool { (sectionType ?? def.type).lowercased() == "json" }
 
     private enum Doc { case html(Document), json(Any) }
     private enum Item { case element(Element), json(Any) }
@@ -28,7 +30,7 @@ final class DeclarativeSource: Source {
 
     func details(_ manga: MangaItem) async throws -> MangaDetails {
         guard let spec = def.details else { return MangaDetails(cover: manga.cover) }
-        let doc = try await load(url(spec.url, vars(key: manga.key)))
+        let doc = try await load(url(spec.url, vars(key: manga.key)), json: isJson(spec.type))
         let item = rootItem(doc)
         return MangaDetails(
             description: field(doc, item, spec.description),
@@ -39,7 +41,7 @@ final class DeclarativeSource: Source {
 
     func chapters(_ manga: MangaItem) async throws -> [Chapter] {
         let spec = def.chapters
-        let doc = try await load(url(spec.url, vars(key: manga.key)))
+        let doc = try await load(url(spec.url, vars(key: manga.key)), json: isJson(spec.type))
         var seen = Set<String>()
         let chapters = items(doc, spec.list).compactMap { item -> Chapter? in
             guard let key = field(doc, item, spec.key), seen.insert(key).inserted else { return nil }
@@ -50,12 +52,12 @@ final class DeclarativeSource: Source {
 
     func pages(_ manga: MangaItem, chapter: Chapter) async throws -> [URL] {
         let spec = def.pages
-        let doc = try await load(url(spec.url, vars(key: chapter.key, mangaKey: manga.key)))
+        let doc = try await load(url(spec.url, vars(key: chapter.key, mangaKey: manga.key)), json: isJson(spec.type))
         return items(doc, spec.list).compactMap { field(doc, $0, spec.image).flatMap(URL.init(string:)) }
     }
 
     private func list(_ spec: ListSpec, _ v: [String: String]) async throws -> [MangaItem] {
-        let doc = try await load(url(spec.url, v))
+        let doc = try await load(url(spec.url, v), json: isJson(spec.type))
         var seen = Set<String>()
         return items(doc, spec.list).compactMap { item in
             guard let key = field(doc, item, spec.key), seen.insert(key).inserted else { return nil }
@@ -93,9 +95,9 @@ final class DeclarativeSource: Source {
         return out
     }
 
-    private func load(_ url: String) async throws -> Doc {
+    private func load(_ url: String, json: Bool) async throws -> Doc {
         let body = try await Http.text(url, headers: def.headers)
-        if isJson {
+        if json {
             return .json(try JSONSerialization.jsonObject(with: Data(body.utf8), options: [.fragmentsAllowed]))
         }
         return .html(try SwiftSoup.parse(body, url))

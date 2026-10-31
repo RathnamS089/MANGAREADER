@@ -8,6 +8,14 @@
       "version": 2,
       "file": "sources/mangadex.json",
       "description": "Official public API"
+    },
+    {
+      "id": "webtoon",
+      "name": "WEBTOON",
+      "lang": "en",
+      "version": 2,
+      "file": "sources/webtoon.json",
+      "description": "Official free webtoons"
     }
   ]
 }

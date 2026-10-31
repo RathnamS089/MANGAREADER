@@ -13,4 +13,10 @@ protocol Source: AnyObject {
     func chapters(_ manga: MangaItem) async throws -> [Chapter]
     /// Remote image URLs, or file URLs for local manga.
     func pages(_ manga: MangaItem, chapter: Chapter) async throws -> [URL]
+    /// How this source's titles read best, used until the reader picks a mode itself.
+    var preferredMode: ReaderMode? { get }
+}
+
+extension Source {
+    var preferredMode: ReaderMode? { nil }
 }

@@ -33,6 +33,9 @@ In the app: **Extensions → Add a GitHub repo** and enter `user/repo`
 | `chapters` | `url`, `list`, `key`, `name`, `date`, `reverse` (set if the site lists oldest first) |
 | `pages` | `url`, `list`, `image` |
 
+Any section can also set its own `type` to override the source's, for an HTML site
+with a JSON chapter API, for example (see `sources/webtoon.json`). iOS only for now.
+
 **URL variables:** `{base}` `{page}` `{offset}` `{query}` `{key}` (the manga
 key for details/chapters, the chapter key for pages) and `{mangaKey}`.
 

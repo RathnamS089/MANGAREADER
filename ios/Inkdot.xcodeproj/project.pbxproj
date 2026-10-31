@@ -14,6 +14,7 @@
 		161C6704FC998CE8705A9BEA /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9217BADC49DCBF7B7DD42A04 /* Library.swift */; };
 		16683C1EC191BF9FAA77D285 /* DetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764CAB7EA8E495AC6C7844D4 /* DetailsView.swift */; };
 		19C57C2806EEECE6A60F7AB4 /* ReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BA13F25592ABAB5ADE0468 /* ReaderView.swift */; };
+		359A0E3102B8EC7F6FA360E1 /* webtoon.json in Resources */ = {isa = PBXBuildFile; fileRef = 5F696BA5D9824505A96EDE81 /* webtoon.json */; };
 		3753A4E1133C661D019FF40D /* SourceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A28A8C734181CBE7EBD51A /* SourceManager.swift */; };
 		45031CDD54F036E4C805384C /* doto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84AB87F2434309FE471522F5 /* doto.ttf */; };
 		4B81B7172E33F534963D57AF /* ExtensionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1AF5FEA0F3538989361C7E5 /* ExtensionsView.swift */; };
@@ -48,6 +49,7 @@
 		4864BA327CE4142853F2A097 /* ZoomableImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableImage.swift; sourceTree = "<group>"; };
 		58F6937CEEFE9837F352E1D7 /* CurlReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurlReader.swift; sourceTree = "<group>"; };
 		5C3CB02660A585BB8FDF415C /* GlassTurn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassTurn.swift; sourceTree = "<group>"; };
+		5F696BA5D9824505A96EDE81 /* webtoon.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = webtoon.json; sourceTree = "<group>"; };
 		66BA13F25592ABAB5ADE0468 /* ReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderView.swift; sourceTree = "<group>"; };
 		6C3C8F58449F73676B439858 /* mangadex.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = mangadex.json; sourceTree = "<group>"; };
 		764CAB7EA8E495AC6C7844D4 /* DetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsView.swift; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 			children = (
 				84AB87F2434309FE471522F5 /* doto.ttf */,
 				6C3C8F58449F73676B439858 /* mangadex.json */,
+				5F696BA5D9824505A96EDE81 /* webtoon.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -249,6 +252,7 @@
 				A914494449E23E6E9C385BA4 /* Assets.xcassets in Resources */,
 				45031CDD54F036E4C805384C /* doto.ttf in Resources */,
 				A158ED29D39312CF767BFC41 /* mangadex.json in Resources */,
+				359A0E3102B8EC7F6FA360E1 /* webtoon.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

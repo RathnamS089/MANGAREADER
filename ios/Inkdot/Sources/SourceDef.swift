@@ -12,6 +12,8 @@ struct SourceDef: Codable {
     var baseUrl = ""
     var pageSize = 20
     var headers: [String: String] = [:]
+    /// Suggested reader mode: "ltr", "rtl" or "vertical" (webtoons).
+    var readerMode: String?
     var popular: ListSpec
     var search: ListSpec?
     var details: DetailsSpec?
@@ -28,6 +30,7 @@ struct SourceDef: Codable {
         baseUrl = try c.decodeIfPresent(String.self, forKey: .baseUrl) ?? ""
         pageSize = try c.decodeIfPresent(Int.self, forKey: .pageSize) ?? 20
         headers = try c.decodeIfPresent([String: String].self, forKey: .headers) ?? [:]
+        readerMode = try c.decodeIfPresent(String.self, forKey: .readerMode)
         popular = try c.decode(ListSpec.self, forKey: .popular)
         search = try c.decodeIfPresent(ListSpec.self, forKey: .search)
         details = try c.decodeIfPresent(DetailsSpec.self, forKey: .details)
@@ -37,6 +40,8 @@ struct SourceDef: Codable {
 }
 
 struct ListSpec: Codable {
+    /// Overrides the source's `type` for this section.
+    var type: String?
     var url: String
     var list: String
     var key: String
@@ -45,6 +50,7 @@ struct ListSpec: Codable {
 }
 
 struct DetailsSpec: Codable {
+    var type: String?
     var url = "{key}"
     var description: String?
     var author: String?
@@ -52,6 +58,7 @@ struct DetailsSpec: Codable {
 
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        type = try c.decodeIfPresent(String.self, forKey: .type)
         url = try c.decodeIfPresent(String.self, forKey: .url) ?? "{key}"
         description = try c.decodeIfPresent(String.self, forKey: .description)
         author = try c.decodeIfPresent(String.self, forKey: .author)
@@ -60,6 +67,7 @@ struct DetailsSpec: Codable {
 }
 
 struct ChapterSpec: Codable {
+    var type: String?
     var url = "{key}"
     var list: String
     var key: String
@@ -70,6 +78,7 @@ struct ChapterSpec: Codable {
 
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        type = try c.decodeIfPresent(String.self, forKey: .type)
         url = try c.decodeIfPresent(String.self, forKey: .url) ?? "{key}"
         list = try c.decode(String.self, forKey: .list)
         key = try c.decode(String.self, forKey: .key)
@@ -80,12 +89,14 @@ struct ChapterSpec: Codable {
 }
 
 struct PageSpec: Codable {
+    var type: String?
     var url = "{key}"
     var list: String
     var image: String
 
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        type = try c.decodeIfPresent(String.self, forKey: .type)
         url = try c.decodeIfPresent(String.self, forKey: .url) ?? "{key}"
         list = try c.decode(String.self, forKey: .list)
         image = try c.decode(String.self, forKey: .image)

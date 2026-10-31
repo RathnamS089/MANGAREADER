@@ -7,7 +7,9 @@ struct ReaderView: View {
     @State private var chapterKey: String
     @Environment(AppModel.self) private var app
     @Environment(\.dismiss) private var dismiss
-    @AppStorage("readerMode") private var mode: ReaderMode = .ltr
+    @AppStorage("readerMode") private var savedMode: ReaderMode = .ltr
+    /// Set once the reader taps a mode chip; until then the source's suggestion wins.
+    @State private var chosenMode: ReaderMode?
     @AppStorage("turnStyle") private var turnStyle: TurnStyle = .curl
     @AppStorage("spreads") private var spreads = true
 
@@ -22,6 +24,15 @@ struct ReaderView: View {
     init(manga: MangaItem, chapterKey: String) {
         self.manga = manga
         _chapterKey = State(initialValue: chapterKey)
+    }
+
+    private var mode: ReaderMode {
+        chosenMode ?? app.sources.source(manga.sourceId)?.preferredMode ?? savedMode
+    }
+
+    private func setMode(_ new: ReaderMode) {
+        chosenMode = new
+        savedMode = new
     }
 
     var body: some View {
@@ -153,9 +164,9 @@ struct ReaderView: View {
                         HStack(spacing: 6) {
                             InkLabel("\(current + 1) / \(total)", color: .white.opacity(0.7))
                             Spacer()
-                            chip("LTR", mode == .ltr) { mode = .ltr }
-                            chip("RTL", mode == .rtl) { mode = .rtl }
-                            chip("WEB", mode == .vertical) { mode = .vertical }
+                            chip("LTR", mode == .ltr) { setMode(.ltr) }
+                            chip("RTL", mode == .rtl) { setMode(.rtl) }
+                            chip("WEB", mode == .vertical) { setMode(.vertical) }
                             if wide && mode != .vertical {
                                 chip("2UP", spreads) { spreads.toggle() }
                             }
